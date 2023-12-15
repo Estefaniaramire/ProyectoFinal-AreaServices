@@ -1,0 +1,542 @@
+PRAGMA foreign_keys=off;
+DROP TABLE IF EXISTS AreaServices;
+PRAGMA foreign_keys=on;
+
+
+-- User/Usuario
+CREATE TABLE User (
+    idUser INTEGER PRIMARY KEY AUTOINCREMENT,
+    userName TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    password TEXT NOT NULL,
+    email TEXT NOT NULL,
+    status INTEGER DEFAULT 1 NOT NULL,
+    idUserCreate INTEGER,
+    creationDate DATE,
+    idUserModify INTEGER,
+    modifiedDate DATE
+);
+
+-- Llaves Foraneas User
+-- En SQLite, se utilizan las restricciones FOREIGN KEY directamente en la definición de la tabla, no con ALTER TABLE.
+CREATE TABLE User (
+    idUser INTEGER PRIMARY KEY AUTOINCREMENT,
+    userName TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    password TEXT NOT NULL,
+    email TEXT NOT NULL,
+    status INTEGER DEFAULT 1 NOT NULL,
+    idUserCreate INTEGER,
+    creationDate DATE,
+    idUserModify INTEGER,
+    modifiedDate DATE,
+    FOREIGN KEY (idUserCreate) REFERENCES User (idUser),
+    FOREIGN KEY (idUserModify) REFERENCES User (idUser),
+    CONSTRAINT UQ_idUserCreate UNIQUE (idUserCreate),
+    CONSTRAINT UQ_idUserModify UNIQUE (idUserModify)
+);
+
+-- Insertar datos en User
+INSERT INTO User (userName, name, password, email, idUserCreate, creationDate)
+VALUES ('Max619', 'Max Ramos', '64679702', 'ramosalex@gmail.com', 1, '2023-12-08');
+
+-- Seleccionar todos los registros de User
+SELECT * FROM User;
+
+
+-- Llaves Foraneas AreaType
+-- En SQLite, se utilizan las restricciones FOREIGN KEY directamente en la definición de la tabla, no con ALTER TABLE.
+
+-- Crear la tabla AreaType con claves foráneas
+CREATE TABLE AreaType (
+    idAreaType INTEGER PRIMARY KEY AUTOINCREMENT,
+    nameArea TEXT,
+    descriptionAreaType TEXT,
+    status INTEGER DEFAULT 1,
+    idUserCreate INTEGER,
+    creationDate DATE,
+    idUserModify INTEGER,
+    modifiedDate DATE,
+    FOREIGN KEY (idUserCreate) REFERENCES User (idUserCreate),
+    FOREIGN KEY (idUserModify) REFERENCES User (idUserModify)
+);
+
+-- Insertar datos en AreaType
+INSERT INTO AreaType (nameArea, descriptionAreaType, status, idUserCreate, creationDate)
+VALUES ('Taller de Maquinas y herramientas', 'Equipo de maquinas y herramientas incluidas', 1, 1, '2023-12-08');
+
+-- Seleccionar todos los registros de AreaType
+SELECT * FROM AreaType;
+
+-- Eliminar un registro en AreaType
+DELETE FROM AreaType
+WHERE idAreaType = 1;
+
+
+-- Crear la tabla Building
+CREATE TABLE Building (
+    idBuilding INTEGER PRIMARY KEY AUTOINCREMENT,
+    number INTEGER,
+    descriptionBuilding TEXT,
+    status INTEGER DEFAULT 1,
+    idUserCreate INTEGER,
+    creationDate DATE,
+    idUserModify INTEGER,
+    modifiedDate DATE
+);
+
+
+-- Llaves Foraneas Building
+-- En SQLite, se utilizan las restricciones FOREIGN KEY directamente en la definición de la tabla, no con ALTER TABLE.
+
+-- Crear la tabla Building con claves foráneas
+CREATE TABLE Building (
+    idBuilding INTEGER PRIMARY KEY AUTOINCREMENT,
+    number INTEGER,
+    descriptionBuilding TEXT,
+    status INTEGER DEFAULT 1,
+    idUserCreate INTEGER,
+    creationDate DATE,
+    idUserModify INTEGER,
+    modifiedDate DATE,
+    FOREIGN KEY (idUserCreate) REFERENCES User (idUserCreate),
+    FOREIGN KEY (idUserModify) REFERENCES User (idUserModify)
+);
+
+-- Insertar datos en Building
+INSERT INTO Building (number, descriptionBuilding, status, idUserCreate, creationDate)
+VALUES (1, 'Edificio 1', 1, 1, '2023-12-08');
+
+-- Seleccionar todos los registros de Building
+SELECT * FROM Building;
+
+-- Crear la tabla Career
+CREATE TABLE Career (
+    idCareer INTEGER PRIMARY KEY AUTOINCREMENT,
+    careerName TEXT,
+    descriptionCareer TEXT,
+    status INTEGER DEFAULT 1,
+    idUserCreate INTEGER,
+    creationDate DATE,
+    idUserModify INTEGER,
+    modifiedDate DATE
+);
+
+-- Llaves Foraneas Career
+-- En SQLite, se utilizan las restricciones FOREIGN KEY directamente en la definición de la tabla, no con ALTER TABLE.
+
+-- Crear la tabla Career con claves foráneas
+CREATE TABLE Career (
+    idCareer INTEGER PRIMARY KEY AUTOINCREMENT,
+    careerName TEXT,
+    descriptionCareer TEXT,
+    status INTEGER DEFAULT 1,
+    idUserCreate INTEGER,
+    creationDate DATE,
+    idUserModify INTEGER,
+    modifiedDate DATE,
+    FOREIGN KEY (idUserCreate) REFERENCES User (idUserCreate),
+    FOREIGN KEY (idUserModify) REFERENCES User (idUserModify)
+);
+
+-- Insertar datos en Career
+INSERT INTO Career (careerName, descriptionCareer, status, idUserCreate, creationDate)
+VALUES ('INFORMATICA', 'Ingenieria en Informatica', 1, 1, '2023-12-08');
+
+-- Seleccionar todos los registros de Career
+SELECT * FROM Career;
+
+
+-- Crear la tabla EmployeeType
+CREATE TABLE EmployeeType (
+    idEmployeeType INTEGER PRIMARY KEY AUTOINCREMENT,
+    nameEmployeeType TEXT,
+    baseSalary REAL,
+    hoursEmployeeType TEXT,
+    status INTEGER DEFAULT 1,
+    idUserCreate INTEGER,
+    creationDate DATE,
+    idUserModify INTEGER,
+    modifiedDate DATE,
+    FOREIGN KEY (idUserCreate) REFERENCES User (idUserCreate),
+    FOREIGN KEY (idUserModify) REFERENCES User (idUserModify)
+);
+
+-- Insertar datos en EmployeeType
+INSERT INTO EmployeeType (nameEmployeeType, baseSalary, hoursEmployeeType, status, idUserCreate, creationDate)
+VALUES ('DOCENTE', 1000.00, '08:00:00', 1, 1, '2023-12-08');
+
+-- Seleccionar todos los registros de EmployeeType
+SELECT * FROM EmployeeType;
+
+-- Crear la tabla StudyPlan
+CREATE TABLE StudyPlan (
+    idStudyPlan INTEGER PRIMARY KEY AUTOINCREMENT,
+    nameStudyPlan TEXT,
+    code INTEGER,
+    duration TEXT, -- Utiliza TEXT para almacenar el tipo de tiempo
+    credits INTEGER,
+    idCareer INTEGER NOT NULL,
+    status INTEGER DEFAULT 1,
+    idUserCreate INTEGER,
+    creationDate DATE,
+    idUserModify INTEGER,
+    modifiedDate DATE,
+    FOREIGN KEY (idCareer) REFERENCES Career (idCareer),
+    FOREIGN KEY (idUserCreate) REFERENCES User (idUserCreate),
+    FOREIGN KEY (idUserModify) REFERENCES User (idUserModify)
+);
+
+-- Restricciones de clave foránea en StudyPlan
+-- En SQLite, las restricciones FOREIGN KEY se colocan directamente en la definición de la tabla.
+
+-- Crear la tabla StudyPlan con claves foráneas
+CREATE TABLE StudyPlan (
+    idStudyPlan INTEGER PRIMARY KEY AUTOINCREMENT,
+    nameStudyPlan TEXT,
+    code INTEGER,
+    duration TEXT,
+    credits INTEGER,
+    idCareer INTEGER NOT NULL,
+    status INTEGER DEFAULT 1,
+    idUserCreate INTEGER,
+    creationDate DATE,
+    idUserModify INTEGER,
+    modifiedDate DATE,
+    FOREIGN KEY (idUserCreate) REFERENCES User (idUserCreate),
+    FOREIGN KEY (idUserModify) REFERENCES User (idUserModify),
+    FOREIGN KEY (idCareer) REFERENCES Career (idCareer)
+);
+
+-- Insertar datos en StudyPlan
+INSERT INTO StudyPlan (nameStudyPlan, code, duration, credits, idCareer, status, idUserCreate, creationDate)
+VALUES ('Ingenieria', 100, '08:00:00', 241, 1, 1, 1, '2023-12-08');
+
+-- Seleccionar todos los registros de StudyPlan
+SELECT * FROM StudyPlan;
+
+-- Crear la tabla Course
+CREATE TABLE Course (
+    idCourse INTEGER PRIMARY KEY AUTOINCREMENT,
+    nameCourse TEXT,
+    credit INTEGER,
+    code INTEGER,
+    idCareer INTEGER NOT NULL,
+    status INTEGER DEFAULT 1,
+    idUserCreate INTEGER,
+    creationDate DATE,
+    idUserModify INTEGER,
+    modifiedDate DATE,
+    FOREIGN KEY (idUserCreate) REFERENCES User (idUserCreate),
+    FOREIGN KEY (idUserModify) REFERENCES User (idUserModify),
+    FOREIGN KEY (idCareer) REFERENCES Career (idCareer)
+);
+
+-- Insertar datos en Course
+INSERT INTO Course (nameCourse, credit, code, idCareer, status, idUserCreate, creationDate)
+VALUES ('Ingenieria', 100, 241, 1, 1, 1, '2023-12-08');
+
+-- Seleccionar todos los registros de Course
+SELECT * FROM Course;
+
+-- Crear la tabla Class
+CREATE TABLE Class (
+    idClass INTEGER PRIMARY KEY AUTOINCREMENT,
+    nameClass TEXT,
+    descriptionClass TEXT,
+    idCourse INTEGER NOT NULL,
+    status INTEGER DEFAULT 1,
+    idUserCreate INTEGER,
+    creationDate DATE,
+    idUserModify INTEGER,
+    modifiedDate DATE,
+    FOREIGN KEY (idUserCreate) REFERENCES User (idUserCreate),
+    FOREIGN KEY (idUserModify) REFERENCES User (idUserModify),
+    FOREIGN KEY (idCourse) REFERENCES Course (idCourse)
+);
+
+-- Insertar datos en Class
+INSERT INTO Class (nameClass, descriptionClass, idCourse, status, idUserCreate, creationDate)
+VALUES ('Algebra Lineal', 'Es una clase de matematicas', 1, 1, 1, '2023-12-08');
+
+-- Seleccionar todos los registros de Class
+SELECT * FROM Class;
+
+-- Crear la tabla ClassDetail
+CREATE TABLE ClassDetail (
+    idClassDetail INTEGER PRIMARY KEY AUTOINCREMENT,
+    startTime TIME,
+    endTime TIME,
+    dateClassDetail DATE,
+    quantityStudent INTEGER,
+    idClass INTEGER NOT NULL,
+    status INTEGER DEFAULT 1,
+    idUserCreate INTEGER,
+    creationDate DATE,
+    idUserModify INTEGER,
+    modifiedDate DATE,
+    FOREIGN KEY (idClass) REFERENCES Class (idClass),
+    FOREIGN KEY (idUserCreate) REFERENCES User (idUserCreate),
+    FOREIGN KEY (idUserModify) REFERENCES User (idUserModify)
+);
+
+-- Insertar datos en ClassDetail
+INSERT INTO ClassDetail (startTime, endTime, dateClassDetail, quantityStudent, idClass, status, idUserCreate, creationDate)
+VALUES ('08:00:00', '10:00:00', '2023-12-08', 25, 1, 1, 1, '2023-12-08');
+
+-- Seleccionar todos los registros de ClassDetail
+SELECT * FROM ClassDetail;
+
+
+-- Area/Area
+CREATE TABLE Area (
+    idArea INTEGER PRIMARY KEY AUTOINCREMENT,
+    nameArea TEXT,
+    number INTEGER,
+    descriptionArea TEXT,
+    idAreaType INTEGER NOT NULL,
+    idBuilding INTEGER NOT NULL,
+    status INTEGER DEFAULT 1,
+    idUserCreate INTEGER,
+    creationDate DATE,
+    idUserModify INTEGER,
+    modifiedDate DATE
+);
+
+-- Llaves foraneas de Area --
+CREATE TABLE IF NOT EXISTS AreaType (
+    idAreaType INTEGER PRIMARY KEY
+);
+
+CREATE TABLE IF NOT EXISTS Building (
+    idBuilding INTEGER PRIAreaServicesMARY KEY
+);
+
+CREATE TABLE IF NOT EXISTS User (
+    idUserCreate INTEGER PRIMARY KEY,
+    idUserModify INTEGER PRIMARY KEY
+);
+
+CREATE INDEX IF NOT EXISTS Fk_AreaAreaType ON Area (idAreaType);
+CREATE INDEX IF NOT EXISTS Fk_AreaBuilding ON Area (idBuilding);
+CREATE INDEX IF NOT EXISTS Fk_AreaUserCreate ON Area (idUserCreate);
+CREATE INDEX IF NOT EXISTS Fk_AreaUserModify ON Area (idUserModify);
+
+-- Insert Area --
+INSERT INTO Area (nameArea, number, descriptionArea, idAreaType, idBuilding, status, idUserCreate, creationDate)
+VALUES ('Área 1', 101, 'Esta es el área 1', 1, 1, 1, 1, '2023-12-08');
+
+SELECT * FROM Area;
+
+
+-- BookCatalog/CatalogoLibro
+CREATE TABLE BookCatalog (
+    idBookCatalog INTEGER PRIMARY KEY AUTOINCREMENT,
+    bookTitle TEXT,
+    authorName TEXT,
+    publisher TEXT,
+    inStock INTEGER NOT NULL,
+    idArea INTEGER NOT NULL,
+    idCourse INTEGER NOT NULL,
+    status INTEGER DEFAULT 1,
+    idUserCreate INTEGER,
+    creationDate DATE,
+    idUserModify INTEGER,
+    modifiedDate DATE
+);
+
+-- Llaves foraneas BookCatalog --
+CREATE INDEX IF NOT EXISTS Fk_BookCatalogArea ON BookCatalog (idArea);
+CREATE INDEX IF NOT EXISTS Fk_BookCatalogCourse ON BookCatalog (idCourse);
+CREATE INDEX IF NOT EXISTS Fk_BookCatalogUserCreate ON BookCatalog (idUserCreate);
+CREATE INDEX IF NOT EXISTS Fk_BookCatalogUserModify ON BookCatalog (idUserModify);
+
+-- Insert BookCatalog --
+INSERT INTO BookCatalog (bookTitle, authorName, publisher, inStock, idArea, idCourse, status, idUserCreate, creationDate)
+VALUES ('Libro 1', 'Autor 1', 'Editorial 1', 10, 1, 1, 1, 1, '2023-12-08');
+
+SELECT * FROM BookCatalog;
+
+
+-- Employee/Empleado
+CREATE TABLE Employee (
+    idEmployee INTEGER PRIMARY KEY AUTOINCREMENT,
+    nameEmployee TEXT,
+    lastNameEmployee TEXT,
+    salary REAL,
+    nss INTEGER,
+    zipCode INTEGER,
+    rfc TEXT,
+    numberPhone TEXT,
+    email TEXT,
+    addressEmployee TEXT,
+    idEmployeeType INTEGER NOT NULL,
+    status INTEGER DEFAULT 1,
+    idUserCreate INTEGER,
+    creationDate DATE,
+    idUserModify INTEGER,
+    modifiedDate DATE
+);
+
+-- Llaves foraneas Employee --
+CREATE INDEX IF NOT EXISTS Fk_EmployeeType ON Employee (idEmployeeType);
+CREATE INDEX IF NOT EXISTS Fk_EmployeeUserCreate ON Employee (idUserCreate);
+CREATE INDEX IF NOT EXISTS Fk_EmployeeUserModify ON Employee (idUserModify);
+
+-- Insert Employee --
+INSERT INTO Employee (nameEmployee, lastNameEmployee, salary, nss, zipCode, rfc, numberPhone, email, addressEmployee, idEmployeeType, status, idUserCreate, creationDate)
+VALUES ('Max', 'Duran', 2500.00, 1234567890, 12345, 'ABC123456DEF', '123-456-7890', 'ramosalex0202@gmail.com', 'Col. Barrera Privada Virginia 705', 1, 1, '2023-12-08');
+
+SELECT * FROM Employee;
+
+
+
+-- Student/Estudiante
+CREATE TABLE Student (
+    idStudent INTEGER PRIMARY KEY AUTOINCREMENT,
+    nameStudent TEXT,
+    lastNameStudent TEXT,
+    registrationNumber INTEGER,
+    rfc TEXT,
+    curp TEXT,
+    nss INTEGER,
+    addressStudent TEXT,
+    email TEXT,
+    numberPhone TEXT,
+    idStudyPlan INTEGER NOT NULL,
+    status INTEGER DEFAULT 1,
+    idUserCreate INTEGER,
+    creationDate DATE,
+    idUserModify INTEGER,
+    modifiedDate DATE
+);
+
+-- Llaves foraneas --
+CREATE INDEX IF NOT EXISTS Fk_StudenStudyPlan ON Student (idStudyPlan);
+CREATE INDEX IF NOT EXISTS Fk_StudentUserCreate ON Student (idUserCreate);
+CREATE INDEX IF NOT EXISTS Fk_StudentUserModify ON Student (idUserModify);
+
+-- Insert Student --
+INSERT INTO Student (nameStudent, lastNameStudent, registrationNumber, rfc, curp, nss, addressStudent, email, numberPhone, idStudyPlan, status, idUserCreate, creationDate)
+VALUES ('Juan', 'González', 255, 'RADA022353', '654698', 123, 'Ciudad A', 'juan@email.com', '1234567890', 1, 1, '2023-12-08');
+
+SELECT * FROM Student;
+
+
+
+-- Authorization/Autorizacion
+CREATE TABLE Authorization_ (
+    idAuthorization INTEGER PRIMARY KEY AUTOINCREMENT,
+    authorizationDate DATE,
+    descriptionAuthorization TEXT,
+    idEmployee INTEGER NOT NULL,
+    status INTEGER DEFAULT 1,
+    idUserCreate INTEGER,
+    creationDate DATE,
+    idUserModify INTEGER,
+    modifiedDate DATE
+);
+
+-- Llaves foraneas Authorization_ --
+CREATE INDEX IF NOT EXISTS Fk_Authorization_Employee ON Authorization_ (idEmployee);
+CREATE INDEX IF NOT EXISTS Fk_Authorization_UserCreate ON Authorization_ (idUserCreate);
+CREATE INDEX IF NOT EXISTS Fk_Authorization_UserModify ON Authorization_ (idUserModify);
+
+-- Insert Authorization --
+INSERT INTO Authorization_ (authorizationDate, descriptionAuthorization, idEmployee, status, idUserCreate, creationDate)
+VALUES ('2023-10-23', 'Primera autorización', 1, 1, 1, '2023-12-08');
+
+SELECT * FROM Authorization_;
+
+
+
+-- LoanAplication/SolicitudPrestamo
+CREATE TABLE LoanAplication (
+    idLoanAplication INTEGER PRIMARY KEY AUTOINCREMENT,
+    numberLoan INTEGER,
+    descriptionLoanAplication TEXT,
+    deliveryDate DATETIME,
+    departureDate DATETIME,
+    quantity INTEGER,
+    idBookCatalog INTEGER,
+    idStudent INTEGER NOT NULL,
+    idAuthorization INTEGER NOT NULL,
+    idEmployee INTEGER NOT NULL,
+    idToolCatalog INTEGER,
+    status INTEGER DEFAULT 1,
+    idUserCreate INTEGER,
+    creationDate DATE,
+    idUserModify INTEGER,
+    modifiedDate DATE
+);
+
+-- Llaves foraneas LoanAplication
+CREATE INDEX IF NOT EXISTS Fk_LoanAplicationBookCatalog ON LoanAplication (idBookCatalog);
+CREATE INDEX IF NOT EXISTS Fk_LoanAplicationStudent ON LoanAplication (idStudent);
+CREATE INDEX IF NOT EXISTS Fk_LoanAplicationAuthorization ON LoanAplication (idAuthorization);
+CREATE INDEX IF NOT EXISTS Fk_LoanAplicationEmployee ON LoanAplication (idEmployee);
+CREATE INDEX IF NOT EXISTS Fk_LoanAplicationToolCatalog ON LoanAplication (idToolCatalog);
+CREATE INDEX IF NOT EXISTS Fk_LoanAplicationUserCreate ON LoanAplication (idUserCreate);
+CREATE INDEX IF NOT EXISTS Fk_LoanAplicationUserModify ON LoanAplication (idUserModify);
+
+-- Insert LoanAplication --
+INSERT INTO LoanAplication (numberLoan, descriptionLoanAplication, deliveryDate, departureDate, quantity, idBookCatalog, idStudent, idAuthorization, idEmployee, idToolCatalog, status, idUserCreate, creationDate)
+VALUES (1, 'Préstamo 1', '2023-10-23 09:00:00', '2023-10-25 17:00:00', 1, 1, 1, 1, 1, 1, 1, 1, '2023-12-08');
+
+SELECT * FROM LoanAplication;
+
+
+
+-- LoanAplicationBookCatalog/SolicitudPrestamoCatalogoLibro
+CREATE TABLE LoanAplicationBookCatalog (
+    idLoanAplicationBookCatalog INTEGER PRIMARY KEY AUTOINCREMENT,
+    idLoanAplication INTEGER NOT NULL,
+    idBookCatalog INTEGER NOT NULL,
+    status INTEGER DEFAULT 1,
+    idUserCreate INTEGER,
+    creationDate DATE,
+    idUserModify INTEGER,
+    modifiedDate DATE
+);
+
+-- Llaves foraneas LoanAplicationBookCatalog
+CREATE INDEX IF NOT EXISTS Fk_LoanAplicationBookCatalog_LoanAplication ON LoanAplicationBookCatalog (idLoanAplication);
+CREATE INDEX IF NOT EXISTS Fk_LoanAplicationBookCatalog_BookCatalog ON LoanAplicationBookCatalog (idBookCatalog);
+CREATE INDEX IF NOT EXISTS Fk_LoanAplicationBookCatalog_UserCreate ON LoanAplicationBookCatalog (idUserCreate);
+CREATE INDEX IF NOT EXISTS Fk_LoanAplicationBookCatalog_UserModify ON LoanAplicationBookCatalog (idUserModify);
+
+-- Insert LoanAplicationBookCatalog --
+INSERT INTO LoanAplicationBookCatalog (idLoanAplication, idBookCatalog, status, idUserCreate, creationDate)
+VALUES (1, 1, 1, 1, '2023-12-08');
+
+SELECT * FROM LoanAplicationBookCatalog;
+
+
+
+-- LoanAplicationToolCatalog/SolicitudPrestamoHerramienta
+CREATE TABLE LoanAplicationToolCatalog (
+    idLoanAplicationToolCatalog INTEGER PRIMARY KEY AUTOINCREMENT,
+    idLoanAplication INTEGER NOT NULL,
+    idToolCatalog INTEGER NOT NULL,
+    status INTEGER DEFAULT 1,
+    idUserCreate INTEGER,
+    creationDate DATE,
+    idUserModify INTEGER,
+    modifiedDate DATE
+);
+
+-- Llaves foraneas LoanAplicationToolCatalog
+CREATE INDEX IF NOT EXISTS Fk_LoanAplicationToolCatalog_LoanAplication ON LoanAplicationToolCatalog (idLoanAplication);
+CREATE INDEX IF NOT EXISTS Fk_LoanAplicationToolCatalog_ToolCatalog ON LoanAplicationToolCatalog (idToolCatalog);
+CREATE INDEX IF NOT EXISTS Fk_LoanAplicationToolCatalog_UserCreate ON LoanAplicationToolCatalog (idUserCreate);
+CREATE INDEX IF NOT EXISTS Fk_LoanAplicationToolCatalog_UserModify ON LoanAplicationToolCatalog (idUserModify);
+
+-- Insert LoanAplicationToolCatalog --
+INSERT INTO LoanAplicationToolCatalog (idLoanAplication, idToolCatalog, status, idUserCreate, creationDate)
+VALUES (1, 1, 1, 1, '2023-12-08');
+
+SELECT * FROM LoanAplicationToolCatalog;
+
+
+
+
